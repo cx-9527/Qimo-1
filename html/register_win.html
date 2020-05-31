@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bottom.css" />
+</head>
+
+<body>
+    <div id="app">
+
+        <header>
+            <div id="fanhui" @click="back"><img :src="img1"></div>
+            <span id="h1">注册</span>
+        </header>
+
+        <div class="z1">
+            <div class="y1">
+                <td>姓名: &nbsp;&nbsp;&nbsp;<input id="name" type="text" placeholder="请输入您的姓名" value="" name="text1" size="18" maxlength="25"></td>
+            </div>
+            <div class="y1">
+                <td>性别: &nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="radi1" value="男" checked>
+                    <font color="black">男</font>
+
+                    <input type="radio" name="radi1" value="女">
+                    <font color="black">女</font>
+                </td>
+            </div>
+            <div class="y1">
+                <td>用户名: &nbsp;&nbsp;&nbsp;<input id="txt1" type="text" name="text1" placeholder="英文或数字" value="" size="18" maxlength="25"></td>
+            </div>
+
+            <div class="y2">
+                <td>密码: &nbsp;&nbsp;&nbsp;<input id="pas1" type="password" name="pwd" value="" size="18" maxlength="25"></td>
+            </div>
+            <div class="y2">
+                <td>再次输入密码: &nbsp;&nbsp;&nbsp;<input id="pas2" type="password" name="pwd" size="18" maxlength="25"></td>
+            </div>
+        </div>
+        <div class="select-box">
+            <!-- <div class="select" @click="Y">{{Yes}}</div> -->
+            <input type="button" name="button" value="注册" @click="Y">
+        </div>
+
+
+        <footer> </footer>
+
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            img1: '../image/fanhui.png',
+            Yes: '确定',
+            No: '取消'
+        },
+        created: function() {
+            apiready = function() {
+                FNScanner = api.require('FNScanner');
+                //全屏显示
+                api.setFullScreen({
+                    fullScreen: true
+                });
+                var header = $api.dom('header'); // 获取 header 标签元素
+                var footer = $api.dom('footer'); // 获取 footer 标签元素
+                var headerH = $api.fixStatusBar(header);
+                var footerH = $api.fixTabBar(footer);
+
+            }
+
+        },
+        beforeMount: function() {
+            console.log("beforeMount");
+        },
+        methods: {
+            back: function() {
+                api.closeWin({
+                    name: 'register_win'
+                });
+            },
+            Y: function() {
+                /*获取单选按钮内容*/
+                var radios = document.getElementsByName("radi1");
+                for (var i = 0; i < radios.length; i++) {
+                    if (radios[i].checked == true) {
+                        var oSex = radios[i].value;
+                    }
+                }
+
+                var oName = document.getElementById('name').value;
+                var oTxt = document.getElementById('txt1').value;
+                var oPas = document.getElementById('pas1').value;
+                var oPas2 = document.getElementById('pas2').value;
+
+                if(oName == ''){
+                  alert("姓名不能为空!");
+                  return;
+                }else if(oTxt == ''){
+                  alert("用户名不能为空!");
+                  return;
+                }
+                else if(oPas == ""){
+                  alert("密码不能为空!");
+                  return;
+                }else if(oPas2 == ""){
+                  alert("第二次密码不能为空!");
+                  return;
+                }else if (oPas != oPas2) {
+                    alert("两次密码不一致，请重新输入!");
+                    return;
+                }else {
+                  api.confirm({
+                      title: 'register',
+                      msg: '是否注册',
+                      buttons: ['确定', '取消']
+                  }, function(ret, err) {
+                      if (ret.buttonIndex == 1) {
+                          api.showProgress({
+                              title: ' ',
+                              text: '注册中...',
+                              modal: false
+                          });
+                          api.ajax({
+                              url: 'http://192.168.0.7:3000/api/register',
+                              method: 'post',
+                              headers: {
+                                  'Content-Type': 'application/json;charset=utf-8'
+                              },
+                              data: {
+                                  body: {
+                                      nickname: oName,
+                                      username: oTxt,
+                                      password: oPas,
+                                      sex: oSex
+                                  }
+                              }
+                          }, function(ret, err) {
+                              if (ret) {
+                                  alert(JSON.stringify(ret));
+                              } else {
+                                  alert(JSON.stringify(err));
+                              }
+                          });
+                          setTimeout(function() {
+                              api.hideProgress();
+                              api.closeWin({
+                                  name: 'register_win'
+                              });
+                          }, 1000);
+
+
+                      } else {
+
+                      }
+                  });
+                }
+
+
+            }
+
+        }
+    });
+</script>
+
+</html>
