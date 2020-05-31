@@ -1,0 +1,86 @@
+body {
+    background-color: white;
+    background: url("./image/rst.jpg") no-repeat;
+}
+
+header {
+    height: 60px;
+    width: 100%;
+    text-align: center;
+    background-color: #bfbfbf;
+    color: #992257;
+    line-height: 44px;
+    font-size: 25px;
+}
+header img{
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin-left: 3%;
+}
+footer {
+    position: fixed;
+    bottom: 0px;
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    background-color: white;
+    line-height: 50px;
+}
+div.z1 {
+    height: 140px;
+    width: 298px;
+    margin: 30px 1px 1px 110px;
+}
+
+div.y1 {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    margin: 10px 1px 1px 20px;
+}
+
+div.y2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    margin: 20px 1px 1px 20px;
+}
+.y1 input {
+    border-bottom: 1px solid pink;
+    border-style: solid;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    outline: none;
+}
+
+.y2 input {
+    border-bottom: 1px solid pink;
+    border-style: solid;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    outline: none;
+}
+.select-box input {
+    font-weight: bold;
+    font-size: 1.4em;
+    width: 100px;
+    height: 25px;
+    background: pink;
+    border-radius: 5px;
+    line-height: 28px;
+}
+
+.select-box{
+  margin-left: 40%;
+  margin-top:  35%;
+}
+/*.select{
+  font-size: 1.5em;
+  float: left;
+  padding:0 0 0 23%;
+}*/
