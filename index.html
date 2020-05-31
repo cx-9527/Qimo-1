@@ -7,56 +7,47 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>Hello APP</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
-    <style type="text/css">
-        html,
-        body {
-            height: 100%;
-        }
-
-        .wrap {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-flex-flow: column;
-        }
-
-        header {
-            height: 44px;
-            width: 100%;
-            text-align: center;
-            background-color: #81a9c3;
-            color: #fff;
-            line-height: 44px;
-            font-size: 20px;
-        }
-
-        .flex-1 {
-            -webkit-box-flex: 1;
-            -webkit-flex: 1;
-        }
-
-        footer {
-            height: 30px;
-            width: 100%;
-            background-color: #81a9c3;
-            color: white;
-            line-height: 30px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./css/bottom.css" />
 </head>
 
 <body class="wrap">
-    <header>APICloud</header>
+    <header>
+        <span id="h1">首页</span>
+        <div id="camera" onclick="clkCamera()"><img src="./image/photo.png"> </div>
+        <div id="register" onclick="clkRegister()"><img src="./image/top_checkIn.png"> </div>
+        <div id="myQr" onclick="clkmyQr()"><img src="./image/QR.png"> </div>
+    </header>
     <section class="flex-1">
 
     </section>
-    <footer>Copyright &copy;<span id="year"></span></footer>
+    <footer>
+
+        <div class="b1" tapmode onclick="changeFrame(this,0)">
+            <a class="ba1">首页</a>
+        </div>
+        <div class="b2" tapmode onclick="changeFrame(this,1)">
+            <a class="ba1">好友</a>
+        </div>
+        <div class="b3" tapmode onclick="changeFrame(this,2)">
+            <a class="ba1">功能2</a>
+        </div>
+        <div class="b4" tapmode onclick="changeFrame(this,3)">
+            <a class="ba1">我的</a>
+        </div>
+    </footer>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript">
+ var FNScanner = null;
     apiready = function() {
+       FNScanner = api.require('FNScanner');
+      //全屏显示
+        api.setFullScreen({
+          fullScreen: true
+        });
         //输出Log，Log将显示在APICloud Studio控制台
-        console.log("Hello World! Hello APICloud!");
+        //  console.log("Hello World! Hello APICloud!");
 
         var header = $api.dom('header'); // 获取 header 标签元素
         var footer = $api.dom('footer'); // 获取 footer 标签元素
@@ -68,23 +59,144 @@
         // 最新api.js为了适配iPhoneX增加的方法，修复底部Footer部分与iPhoneX的底部虚拟横条键重叠的问题；
         var footerH = $api.fixTabBar(footer);
 
-        api.openFrame({
-            name: 'main',
-            url: 'html/main.html',
-            bounces: true,
-            rect: { // 推荐使用Margin布局，用于适配屏幕的动态变化
-                marginTop: headerH, // main页面距离win顶部的高度
-                marginBottom: footerH, // main页面距离win底部的高度
-                w: 'auto' // main页面的宽度 自适应屏幕宽度
-            }
+        api.openFrameGroup({
+            name: 'group1',
+            background: '#fff',
+            scrollEnabled: false,
+            rect: {
+                x: 0,
+                y: 94,
+                w: 'auto',
+                h: api.winHeight - 150 - 10
+            },
+            index: 0,
+            frames: [{
+                name: 'frame1',
+                url: './html/frame01.html',
+                bgColor: '#fff'
+            }, {
+                name: 'frame2',
+                url: './html/frame02.html',
+                bgColor: '#fff'
+            }, {
+                name: 'frame3',
+                url: './html/frame03.html',
+                bgColor: '#fff'
+            }, {
+                name: 'frame4',
+                url: './html/frame04.html',
+                bgColor: '#fff'
+            }]
+        }, function(ret, err) {
+            /*if( ret ){
+                 alert( JSON.stringify( ret ) );
+            }else{
+                 alert( JSON.stringify( err ) );
+            }*/
         });
+    }
 
-        //尝试git4
-        // 获取当前年份时间，并加载显示到页面
-        var year = $api.byId('year');
-        year.innerHTML = new Date().getFullYear();
-    };
+    function changeFrame(obj, id) {
 
+        for (i = 0; i < 4; i++) {
+            var temObj = document.getElementById("q" + i);
+            if (temObj == obj) {
+                $api.addCls(temObj, 'q1_change');
+            } else {
+                $api.removeCls(temObj, 'q1_change');
+            }
+        }
+        api.setFrameGroupIndex({
+            name: 'group1',
+            index: id,
+            scroll: true
+        });
+        var cx = document.getElementById('camera');
+        var zq = document.getElementById('register');
+        var qr = document.getElementById('myQr');
+        if (id == 0) {
+            document.getElementById("h1").innerHTML = "首页";
+            cx.style.display = 'block';
+            zq.style.display = 'none';
+            qr.style.display = 'none';
+
+        }
+        if (id == 1) {
+            document.getElementById("h1").innerHTML = "我的好友";
+            qr.style.display = 'block';
+            cx.style.display = 'none';
+            zq.style.display = 'none';
+        }
+        if (id == 2) {
+            document.getElementById("h1").innerHTML = "功能2";
+            cx.style.display = 'none';
+            zq.style.display = 'none';
+            qr.style.display = 'none';
+        }
+        if (id == 3) {
+            document.getElementById("h1").innerHTML = "我的";
+            cx.style.display = 'none';
+            zq.style.display = 'block';
+            qr.style.display = 'none';
+        }
+    }
+
+    function clkCamera() {
+        api.sendEvent({
+            name: 'clkCamera',
+        });
+    }
+
+    function clkRegister(){
+      api.sendEvent({
+          name: 'clkRegister',
+      });
+
+    }
+    // function clkmyQr(){
+    //   api.sendEvent({
+    //       name: 'clkmyQr',
+    //   });
+    // }
+    function clkmyQr(){
+      FNScanner.open({
+        autorotation: true
+      }, function(ret, err) {
+        if (ret) {
+            if ( ret.eventType== "success" ) {
+              var content = ret.content.split('_');
+              var app_type = content[0];
+              var QR_type = content[1];
+              var QR_txt = content[2];
+              if ( app_type == "demo" ) {
+                if ( QR_type == "user" ) {
+                  var data = JSON.parse( QR_txt );
+                  api.confirm({
+                      title: '确认',
+                      msg: '是否添加好友？\n\n姓名：' + data.name + '\n年龄:' + data.age,
+                      buttons: ['确定', '取消']
+                  }, function(ret, err){
+                      if( ret ){
+                        var index = ret.buttonIndex;
+                        if ( index == 1 ) {
+                          api.sendEvent({
+                              name: 'addFriend',
+                              extra: data
+                          });
+                          api.alert({msg:"好友添加成功"});
+                        }
+                      }
+                  });
+                }else{
+                  api.alert({msg:"此二维码格式不正确"});
+                }
+              }else{
+                api.alert({msg:"此二维码格式不正确"});
+              }
+            }
+        }
+      });
+    }
 </script>
 
 </html>
